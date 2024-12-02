@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-NAME = xa
+NAME = GET_NEXT_LINE 
 AR = ar 
 ARFLAGS = -rc
 
