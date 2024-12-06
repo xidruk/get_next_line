@@ -14,8 +14,9 @@ static char *drs(const char *buff, size_t last)
         new_buff[index] = buff[index];
         index++;
     }
-    new_buff[index] = '\n';
-    new_buff[index++] = '\0';
+    if (buff[index] == '\n')
+        new_buff[index++] = '\n';
+    new_buff[index] = '\0';
     return (new_buff);
 }
 
@@ -27,10 +28,8 @@ static char *extract_line(char *buffer)
     last = 0;
     if (!buffer || !*buffer)
         return (NULL);
-    
-    while (*buffer && *buffer != '\n')
+    while (buffer[last] && buffer[last] != '\n')
         last++;
-    
     line = drs(buffer, last);
     return (line);
 }
@@ -59,23 +58,28 @@ char    *get_next_line(int fd)
     char read_buf[BUFFER_SIZE + 1];
     ssize_t bytes_readed;
     char *line;
-    int _infloop;
 
-    _infloop = 1;
     if (fd < 0 || BUFFER_SIZE <= 0)
         return (NULL);
-    while (_infloop)
+    while (!c_search(buffer, '\n'))
     {
         bytes_readed = read(fd, read_buf, BUFFER_SIZE);
-        if (bytes_readed <= 0 && (!buffer || !*buffer))
-            return (free(buffer), buffer = NULL, NULL);
+        if (bytes_readed < 0)
+        {
+            if (buffer)
+                free(buffer);
+            buffer = NULL;
+            return (NULL);
+        }
+        if (bytes_readed == 0)
+            break;
         read_buf[bytes_readed] = '\0';
         buffer = join_strings(buffer, read_buf);
         if (!buffer)
             return (NULL);
-        if (c_search(buffer, '\n') || bytes_readed <= 0)
-            _infloop = 0;
     }
+    if (!buffer || !*buffer)
+		return (free(buffer), buffer = NULL, NULL);
     line = extract_line(buffer);
     buffer = update_buffer(buffer);
     return (line);
