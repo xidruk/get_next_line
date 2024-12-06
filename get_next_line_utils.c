@@ -7,11 +7,8 @@ size_t get_length(const char *string)
     if (!string)
         return (0);
     length = 0;
-    while (*string)
-    {
+    while (string[length])
         length++;
-        string++;
-    }
     return (length);
 }
 
@@ -51,12 +48,8 @@ char *join_strings(char *s1, char *s2)
 
     s1_len = 0;
     s2_len = 0;
-    if (!s1 && !s2)
-
-    if (s1)
-        s1_len = get_length(s1);
-    if (s2)
-        s2_len = get_length(s2);
+    s1_len = get_length(s1);
+    s2_len = get_length(s2);
     new_len = s1_len + s2_len + 1;
     joined_string = malloc(new_len * sizeof(char));
     if (!joined_string)
@@ -65,7 +58,6 @@ char *join_strings(char *s1, char *s2)
     free(s1);
     return(joined_string);
 }
-
 
 char *c_search(const char *s_in_str, int c)
 {
@@ -90,16 +82,13 @@ char *duplicate_string(const char *or_str)
     size_t index;
 
     index = 0;
-    if (!or_str)
-        return (NULL);
     dpc_string = malloc((get_length(or_str) + 1) * sizeof(char));
     if (!dpc_string)
         return (NULL);
-    while (*or_str)
+    while (or_str[index])
     {
         dpc_string[index] = or_str[index];
         index++;
-        or_str++;
     }
     dpc_string[index] = '\0';
     return (dpc_string);
